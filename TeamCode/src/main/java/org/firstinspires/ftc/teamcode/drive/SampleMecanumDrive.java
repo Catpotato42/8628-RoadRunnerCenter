@@ -75,10 +75,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private DcMotorEx frontLeft, backLeft, backRight, frontRight;
 
-    public NormalizedColorSensor colorFront;
-    public NormalizedColorSensor colorLeft;
+    public RevColorSensorV3 colorFront;
+    public RevColorSensorV3 colorLeft;
     private List<DcMotorEx> motors;
-
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
@@ -133,8 +132,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
@@ -266,6 +265,18 @@ public class SampleMecanumDrive extends MecanumDrive {
         setDrivePower(vel);
     }
 
+    //mecanum
+    public void mecanumDrive(double forward, double sideways, double rotation){
+
+        // Set the power of each motor
+        frontLeft.setPower((forward + sideways + rotation) * 1.0);
+        frontRight.setPower((forward - sideways) - rotation * 1.0);
+        backLeft.setPower((forward - sideways) + rotation * 1.0);
+        backRight.setPower(forward + (sideways - rotation) * 1.0);
+
+    }
+
+    //could be useful for other motors not just wheels
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
@@ -321,4 +332,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
+
+
 }

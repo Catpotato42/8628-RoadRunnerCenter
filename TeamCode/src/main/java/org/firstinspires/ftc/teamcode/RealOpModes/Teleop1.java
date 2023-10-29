@@ -28,25 +28,25 @@ public class Teleop1 extends OpMode {
                 drive.mecanumDrive(gamepad1.right_stick_y, -gamepad1.right_stick_x, -gamepad1.left_stick_x);
             }
 
-            /*if(gamepad2.left_bumper) {
+            if(gamepad2.left_bumper) {
                 drive.setXrailPower(gamepad2.right_stick_y*.5, gamepad2.left_stick_y*.5);
             } else {
                 drive.setXrailPower(gamepad2.right_stick_y, gamepad2.left_stick_y);
-            }*/
+            }
             //start
             //This code below may be useful for coding our intake and drops
-        /*
+
             // open servo
             if (gamepad2.y) {
-            robot.grabberServo(1); //dumps stuff out
+            drive.grabberServo(1); //dumps stuff out
             } else if (gamepad2.x) {
-            robot.grabberServo(0); //
+            drive.grabberServo(0); //
             } else if (gamepad2.a) {
-            robot.grabberServo(0.2); //test1
+            drive.grabberServo(0.2); //test1
             } else if (gamepad2.b) {
-            robot.grabberServo(0.4); //test2
+            drive.grabberServo(0.4); //test2
             }
-        */
+
 
 
         }

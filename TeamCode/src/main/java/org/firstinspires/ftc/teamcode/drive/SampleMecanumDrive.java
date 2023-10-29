@@ -198,6 +198,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         xRailExt.setPower(v1);
     }
 
+    public void grabberServo (double v) {
+        grabberServo.setPosition(v);
+    }
+
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();

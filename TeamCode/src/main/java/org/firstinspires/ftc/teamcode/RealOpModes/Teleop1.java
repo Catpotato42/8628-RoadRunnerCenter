@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @TeleOp(name = "Teleop1")
 public class Teleop1 extends OpMode {
         double xRailPower;
+        double Sensed;
         public void init() {
             xRailPower = .5;
         }
@@ -38,16 +39,16 @@ public class Teleop1 extends OpMode {
 
             // open servo
             if (gamepad2.y) {
-            drive.grabberServo(1); //dumps stuff out
+            drive.grabberServo(1); //grabs
             } else if (gamepad2.x) {
-            drive.grabberServo(0); //
+            drive.grabberServo(0); //dumps stuff out
             } else if (gamepad2.a) {
-            drive.grabberServo(0.2); //test1
+                Sensed = drive.Sense(drive.colorFront); //test1
+                telemetry.addData("Distance: ", Sensed);
             } else if (gamepad2.b) {
             drive.grabberServo(0.4); //test2
             }
-
-
+            telemetry.update();
 
         }
 

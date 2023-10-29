@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RealOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -9,14 +10,15 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
 @TeleOp(name = "Teleop1")
-public class Teleop1 extends LinearOpMode {
-    @Override public void runOpMode() throws InterruptedException {
+public class Teleop1 extends OpMode {
+        double xRailPower;
+        public void init() {
+            xRailPower = .5;
+        }
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        waitForStart();
-
-        while (opModeIsActive()) {
+        public void loop() {
+            SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
             //mecanum drive w/ precision mode
             if (gamepad1.left_bumper) {
                 drive.mecanumDrive(0.5 * gamepad1.right_stick_y, -0.5 * gamepad1.right_stick_x, -0.5 * gamepad1.left_stick_x);
@@ -48,7 +50,7 @@ public class Teleop1 extends LinearOpMode {
 
 
         }
-    }
+
 
 
 

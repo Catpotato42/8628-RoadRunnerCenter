@@ -21,15 +21,27 @@ public class RedBackstageAuto extends LinearOpMode {
 
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                .forward(10)
+                .forward(38.5)
                 .build();
         Trajectory traj2pos1 = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(5,0),Math.toRadians(180))
+                .splineTo(new Vector2d(0,10),Math.toRadians(180))
                 .build();
 
         drive.followTrajectory(traj1);
-        sleep(1000);
-        drive.followTrajectory(traj2pos1);
+        double frontSense = drive.Sense(drive.colorFront);
+        double leftSense = drive.Sense(drive.colorLeft);
+        if (frontSense < 4.0) {
+            telemetry.addData("A", frontSense);
+        } else if (leftSense <4.0) {
+            telemetry.addData("B", leftSense);
+        } else if (leftSense>=4.0 && frontSense >= 4.0) {
+            telemetry.addData("C", leftSense);
+        } else {
+            telemetry.addData("D", leftSense);
+        }
+        telemetry.update();
+        sleep(300);
+
 
     }
 

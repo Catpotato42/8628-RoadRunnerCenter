@@ -22,11 +22,11 @@ public class Teleop1 extends OpMode {
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
             //mecanum drive w/ precision mode
             if (gamepad1.left_bumper) {
-                drive.mecanumDrive(0.5 * gamepad1.right_stick_y, -0.5 * gamepad1.right_stick_x, -0.5 * gamepad1.left_stick_x);
+                drive.mecanumDrive(-0.5 * gamepad1.right_stick_y, 0.5 * gamepad1.right_stick_x, 0.5 * gamepad1.left_stick_x);
             } else if (gamepad1.right_bumper) {
-                drive.mecanumDrive(0.25 * gamepad1.right_stick_y, -0.25 * gamepad1.right_stick_x, -0.25 * gamepad1.left_stick_x);
+                drive.mecanumDrive(-0.25 * gamepad1.right_stick_y, 0.25 * gamepad1.right_stick_x, 0.25 * gamepad1.left_stick_x);
             } else {
-                drive.mecanumDrive(gamepad1.right_stick_y, -gamepad1.right_stick_x, -gamepad1.left_stick_x);
+                drive.mecanumDrive(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
             }
 
             if(gamepad2.left_bumper) {

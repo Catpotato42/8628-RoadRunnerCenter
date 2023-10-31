@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class Teleop1 extends OpMode {
         double xRailPower;
         double Sensed;
+        double sensedColor;
         public void init() {
             xRailPower = .5;
         }
@@ -43,8 +44,10 @@ public class Teleop1 extends OpMode {
             } else if (gamepad2.x) {
             drive.grabberServo(0); //dumps stuff out
             } else if (gamepad2.a) {
-                Sensed = drive.Sense(drive.colorFront); //test1
+                Sensed = drive.Sense(drive.colorBack); //test1
+                sensedColor = drive.colorBack.green();
                 telemetry.addData("Distance: ", Sensed);
+                telemetry.addData("Distance: ", sensedColor);
             } else if (gamepad2.b) {
             drive.grabberServo(0.4); //test2
             }

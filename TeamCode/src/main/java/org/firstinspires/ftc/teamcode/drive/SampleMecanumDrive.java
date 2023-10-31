@@ -81,7 +81,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public Servo grabberServo;
 
-    public RevColorSensorV3 colorFront;
+    public RevColorSensorV3 colorBack;
     public RevColorSensorV3 colorLeft;
     private List<DcMotorEx> motors;
     private IMU imu;
@@ -126,7 +126,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         frontRight = hardwareMap.get(DcMotorEx.class, "rf");
 
         //sensors
-        colorFront = hardwareMap.get(RevColorSensorV3.class, "colorFront");
+        colorBack = hardwareMap.get(RevColorSensorV3.class, "colorFront");
         colorLeft = hardwareMap.get(RevColorSensorV3.class, "colorLeft");
 
         //servos

@@ -19,28 +19,44 @@ public class RedBackstageAuto extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
+        //drive.setPoseEstimate();
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                .forward(38.5)
+                .lineTo(new Vector2d(-29.5, 0))
                 .build();
-        Trajectory traj2pos1 = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(0,10),Math.toRadians(180))
+        Trajectory trajBack = drive.trajectoryBuilder(new Pose2d())
+                .lineTo(new Vector2d(-50, -30))
                 .build();
+        /*Trajectory trajLeft = drive.trajectoryBuilder(new Pose2d())
+                .lineTo(new Vector2d(0, 0)) //placeholder
+                .build();
+        Trajectory trajRight = drive.trajectoryBuilder(new Pose2d())
+                .splineTo(new Vector2d(-50, -30), 0) //placeholder
+                .build();*/
 
         drive.followTrajectory(traj1);
-        double frontSense = drive.Sense(drive.colorFront);
+        double backSense = drive.Sense(drive.colorBack);
         double leftSense = drive.Sense(drive.colorLeft);
-        if (frontSense < 4.0) {
-            telemetry.addData("A", frontSense);
-        } else if (leftSense <4.0) {
-            telemetry.addData("B", leftSense);
-        } else if (leftSense>=4.0 && frontSense >= 4.0) {
-            telemetry.addData("C", leftSense);
-        } else {
-            telemetry.addData("D", leftSense);
+        if (backSense < 2.9) { //if team object is at the BACK
+            telemetry.addData("Back", backSense);
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(traj1.end(), true)
+                            .lineTo(new Vector2d(-25, 0))
+                            .build()
+            );
+            drive.turn(Math.toRadians(180));
+            drive.followTrajectory(traj1);
+            drive.grabberServo(1);
+            drive.followTrajectory(trajBack);
+        } else if (leftSense <2.9) { //if team object is on the LEFT
+            telemetry.addData("Left", leftSense);
+        } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the RIGHT
+            telemetry.addData("Right", leftSense);
+        } else { //if like the sun explodes idk
+            telemetry.addData("?????", leftSense);
         }
         telemetry.update();
-        sleep(300);
+        sleep(10000);
 
 
     }

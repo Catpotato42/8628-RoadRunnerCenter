@@ -54,9 +54,9 @@ public class Teleop1 extends OpMode {
 
             if (gamepad2.right_bumper) {
                 drive.setXrailPower(gamepad2.right_stick_y, gamepad2.left_stick_y);
-            } else if(gamepad2.left_bumper && drive.xRailRot.getCurrentPosition() < (xRailRotMin - 10)) {
+            } else if(gamepad2.left_bumper && drive.xRailRot.getCurrentPosition() > (xRailRotMin - 10)) {
                 drive.setXrailPower(gamepad2.right_stick_y*.5, gamepad2.left_stick_y*.5);
-            }  else if (drive.xRailRot.getCurrentPosition() < (xRailRotMin-10)) {
+            }  else if (drive.xRailRot.getCurrentPosition() > (xRailRotMin-10)) {
                 drive.setXrailPower(gamepad2.right_stick_y, gamepad2.left_stick_y);
             } else {
                 telemetry.addData("Error: predicted SIpos is <= Rotational minimum. Current SIpos: ", drive.xRailRot.getCurrentPosition());

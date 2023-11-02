@@ -16,6 +16,8 @@ public class RedBackstageAuto extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
+        double xRailRotMin = drive.xRailRot.getCurrentPosition();
+
         waitForStart();
         if (isStopRequested()) return;
 

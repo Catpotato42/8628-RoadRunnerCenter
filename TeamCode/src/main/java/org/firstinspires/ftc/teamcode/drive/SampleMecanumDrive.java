@@ -199,9 +199,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
-    public void setXrailPower (double v, double v1) {
-        xRailRot.setPower(v);
-        xRailExt.setPower(v1);
+    public void setXrailPower (double Rot, double Ext) {
+        xRailRot.setPower(Rot);
+        xRailExt.setPower(Ext);
     }
 
     public void grabberServo (double v) {

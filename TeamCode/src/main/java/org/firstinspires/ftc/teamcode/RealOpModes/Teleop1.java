@@ -67,6 +67,15 @@ public class Teleop1 extends OpMode {
             }
             //start
             //This code below may be useful for coding our intake and drops
+            if (gamepad1.dpad_up) {
+                drive.droneServo.setPosition(1);
+            } else if (gamepad2.dpad_down) {
+                drive.hangerServo.setPosition(1);
+            } else if (gamepad1.dpad_left) {
+                drive.droneServo.setPosition(0);
+            } else if (gamepad2.dpad_right) {
+                drive.hangerServo.setPosition(0);
+            }
 
             // open servo
             if (gamepad2.y) {

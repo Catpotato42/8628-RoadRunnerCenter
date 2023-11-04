@@ -38,12 +38,12 @@ public class RedBackstageAuto extends LinearOpMode {
         Trajectory trajBack1 = drive.trajectoryBuilder(new Pose2d(-25, 0))
                 .lineTo(new Vector2d(-40, 40))
                 .build();
-        /*Trajectory trajLeft = drive.trajectoryBuilder(new Pose2d())
-                .lineTo(new Vector2d(0, 0)) //placeholder
+        Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-25, 0, -Math.toRadians(90)))
+                .lineTo(new Vector2d(-25, -3)) //placeholder
                 .build();
-        Trajectory trajRight = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(-50, -30), 0) //placeholder
-                .build();*/
+        Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(90)))
+                .lineTo(new Vector2d(-25, 3)) //placeholder
+                .build();
 
         drive.followTrajectory(traj1);
         double backSense = drive.Sense(drive.colorBack);
@@ -58,18 +58,35 @@ public class RedBackstageAuto extends LinearOpMode {
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
-            drive.turn(-Math.toRadians(90));
+            /*drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajBack1);
             telemetry.addData("Back park", backSense);
             telemetry.update();
             sleep(1000);
             while(drive.xRailRot.getCurrentPosition() > xRailRotMin) {
                 drive.setXrailPower(.5, 0);
-            }
+            }*/
         } else if (leftSense <2.9) { //if team object is on the LEFT
             telemetry.addData("Left", leftSense);
+            telemetry.update();
+            //drive.followTrajectory(trajBack);
+            drive.turn(Math.toRadians(90));
+            drive.followTrajectory(trajLeft0);
+            drive.grabberServo(1);
+            drive.setXrailPower(-.5,0);
+            sleep(1000);
+            drive.setXrailPower(0,0);
+
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the RIGHT
             telemetry.addData("Right", leftSense);
+            telemetry.update();
+            //drive.followTrajectory(trajBack);
+            drive.turn(-Math.toRadians(90));
+            drive.followTrajectory(trajRight0);
+            drive.grabberServo(1);
+            drive.setXrailPower(-.5,0);
+            sleep(1000);
+            drive.setXrailPower(0,0);
         } else { //if like the sun explodes idk
             telemetry.addData("?????", leftSense);
         }

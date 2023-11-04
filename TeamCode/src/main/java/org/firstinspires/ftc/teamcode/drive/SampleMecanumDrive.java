@@ -80,6 +80,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public DcMotorEx xRailRot, xRailExt;
 
     public Servo grabberServo;
+    public Servo droneServo;
+    public Servo hangerServo;
 
     public RevColorSensorV3 colorBack;
     public RevColorSensorV3 colorLeft;
@@ -131,6 +133,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         //servos
         grabberServo = hardwareMap.get(Servo.class, "grabberServo");
+        droneServo = hardwareMap.get(Servo.class, "droneServo");
+        hangerServo = hardwareMap.get(Servo.class, "hangerServo");
         motors = Arrays.asList(frontLeft, backLeft, backRight, frontRight);
 
         for (DcMotorEx motor : motors) {

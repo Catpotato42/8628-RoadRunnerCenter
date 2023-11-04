@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TurnTest;
 
 @Autonomous
-public class RedBackstageAuto extends LinearOpMode {
+public class BlueBackstageAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,11 +38,11 @@ public class RedBackstageAuto extends LinearOpMode {
         Trajectory trajBack1 = drive.trajectoryBuilder(new Pose2d(-25, 0))
                 .lineTo(new Vector2d(-40, 40))
                 .build();
-        Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, -3)) //placeholder
+        Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-25, 0, -Math.toRadians(90)))
+                .lineTo(new Vector2d(-25, -3)) //placeholder
                 .build();
-        Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, 3)) //placeholder
+        Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(90)))
+                .lineTo(new Vector2d(-25, 3)) //placeholder
                 .build();
 
         drive.followTrajectory(traj1);

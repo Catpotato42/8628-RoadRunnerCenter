@@ -8,10 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.opmode.TurnTest;
 
 @Autonomous
-public class RedBackstageAuto extends LinearOpMode {
+public class RedAudienceAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,7 +38,7 @@ public class RedBackstageAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-40, 40))
                 .build();
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, -3)) //placeholder
+                .lineTo(new Vector2d(-29.5, -1)) //placeholder
                 .build();
         Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
                 .lineTo(new Vector2d(-29.5, 3)) //placeholder
@@ -58,7 +57,6 @@ public class RedBackstageAuto extends LinearOpMode {
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
-
             /*drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajBack1);
             telemetry.addData("Back park", backSense);

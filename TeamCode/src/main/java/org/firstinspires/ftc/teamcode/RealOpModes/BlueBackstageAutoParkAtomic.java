@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class BlueBackstageAutoPark extends LinearOpMode {
+public class BlueBackstageAutoParkAtomic extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {

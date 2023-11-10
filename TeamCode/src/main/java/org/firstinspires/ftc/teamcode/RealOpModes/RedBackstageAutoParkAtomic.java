@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class BlueBackstageAutoPark extends LinearOpMode {
+public class RedBackstageAutoParkAtomic extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -76,6 +76,7 @@ public class BlueBackstageAutoPark extends LinearOpMode {
             sleep(1000);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
+            sleep(5000);
             drive.followTrajectory(trajBack2);
             /*drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajBack1);
@@ -96,6 +97,7 @@ public class BlueBackstageAutoPark extends LinearOpMode {
             sleep(1000);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
+            sleep(5000);
             drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the RIGHT
@@ -109,13 +111,14 @@ public class BlueBackstageAutoPark extends LinearOpMode {
             sleep(1000);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
+            sleep(5000);
             drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk
             telemetry.addData("?????", leftSense);
         }
         telemetry.update();
-        sleep(10000);
+        sleep(5000);
 
 
     }

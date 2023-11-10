@@ -26,7 +26,7 @@ public class RedAudienceAuto extends LinearOpMode {
         //drive.setPoseEstimate();
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                .lineTo(new Vector2d(-29.5, 0))
+                .lineTo(new Vector2d(-26.5, 0))
                 .build();
         Trajectory trajBack =  drive.trajectoryBuilder(traj1.end(), true)
                 .lineTo(new Vector2d(-25, 0))
@@ -38,10 +38,10 @@ public class RedAudienceAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-40, 40))
                 .build();
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, -1)) //placeholder
+                .lineTo(new Vector2d(-26.5, -1)) //placeholder
                 .build();
         Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, 3)) //placeholder
+                .lineTo(new Vector2d(-26.5, 3)) //placeholder
                 .build();
 
         drive.followTrajectory(traj1);

@@ -26,7 +26,7 @@ public class RedBackstageAutoPark extends LinearOpMode {
         //drive.setPoseEstimate();
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                .lineTo(new Vector2d(-29.5, 0))
+                .lineTo(new Vector2d(-26.5, 0))
                 .build();
 
         Trajectory trajBack =  drive.trajectoryBuilder(traj1.end(), true)

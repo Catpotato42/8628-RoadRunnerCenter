@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -24,6 +25,7 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
         double xRailRotMin = drive.xRailRot.getCurrentPosition();
 
         double DESIRED_DISTANCE = 19.0; //  this is how close the camera should get to the target (inches)
+        ElapsedTime elapsedRunTime = new ElapsedTime();
 
         //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
         //  applied to the drive motors to correct the error.

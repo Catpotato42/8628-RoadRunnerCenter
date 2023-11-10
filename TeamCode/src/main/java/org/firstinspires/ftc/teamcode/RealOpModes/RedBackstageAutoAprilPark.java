@@ -6,14 +6,18 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Autonomous
 public class RedBackstageAutoAprilPark extends LinearOpMode {
@@ -25,6 +29,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double xRailRotMin = drive.xRailRot.getCurrentPosition();
+        ElapsedTime elapsedRunTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
         double DESIRED_DISTANCE = 19.0; //  this is how close the camera should get to the target (inches)
 
@@ -50,6 +55,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         boolean done = false;
         drive.initAprilTag(aprilTag, visionPortal);
 
+        setManualExposure(6, 250, visionPortal);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -135,8 +141,15 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             //sleep(1000);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
-            drive.followTrajectory(trajLeftApril);
-            while (done = false) {
+            //drive.followTrajectory(trajLeftApril);
+            elapsedRunTime.reset();
+            while (done == false) {
+                telemetry.addData("while: ", 0);
+                telemetry.update();
+                sleep(1000);
+                targetFound = false;
+                desiredTag  = null;
+                //this next line has problems
                 List<AprilTagDetection> currentDetections = aprilTag.getDetections();
                 for (AprilTagDetection detection : currentDetections) {
                     // Look to see if we have size info on this tag.
@@ -146,6 +159,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                             // Yes, we want to use this tag.
                             targetFound = true;
                             desiredTag = detection;
+                            telemetry.addData("Tagid: ", detection.id);
                             break;  // don't look any further.
                         } else {
                             // This tag is in the library, but we do not want to track it right now.
@@ -156,6 +170,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                         telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                     }
                 }
+                telemetry.update();
 
                 // Tell the driver what we see, and what to do.
                 if (targetFound) {
@@ -170,12 +185,13 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
 
                 // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
                 if (targetFound) {
+                    telemetry.addData("target found: ", 0);
 
                     // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                     double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                     double  headingError    = desiredTag.ftcPose.bearing;
                     double  yawError        = desiredTag.ftcPose.yaw;
-                    if (rangeError < DESIRED_DISTANCE + .1) {
+                    if (rangeError < DESIRED_DISTANCE + .1 && elapsedRunTime.time() > 3) {
                         done = true;
                     }
 
@@ -198,7 +214,6 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 // Apply desired axes motions to the drivetrain.
                 drive.moveRobot(power, strafe, turn);
                 sleep(10);
-
 
             }
             drive.followTrajectory(trajLeft2);
@@ -215,9 +230,13 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             //sleep(1000);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
-            drive.followTrajectory(trajRightApril);
+            //drive.followTrajectory(trajRightApril);
             drive.turn(Math.toRadians(180));
-            while (done = false) {
+            elapsedRunTime.reset();
+            while (done == false) {
+                telemetry.addData("while: ", 0);
+                telemetry.update();
+                sleep(1000);
                 List<AprilTagDetection> currentDetections = aprilTag.getDetections();
                 for (AprilTagDetection detection : currentDetections) {
                     // Look to see if we have size info on this tag.
@@ -227,6 +246,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                             // Yes, we want to use this tag.
                             targetFound = true;
                             desiredTag = detection;
+                            telemetry.addData("Tagid: ", detection.id);
                             break;  // don't look any further.
                         } else {
                             // This tag is in the library, but we do not want to track it right now.
@@ -237,6 +257,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                         telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                     }
                 }
+                telemetry.update();
 
                 // Tell the driver what we see, and what to do.
                 if (targetFound) {
@@ -251,12 +272,13 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
 
                 // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
                 if (targetFound) {
+                    telemetry.addData("target found: ", 0);
 
                     // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                     double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                     double  headingError    = desiredTag.ftcPose.bearing;
                     double  yawError        = desiredTag.ftcPose.yaw;
-                    if (rangeError < DESIRED_DISTANCE + .1) {
+                    if (rangeError < DESIRED_DISTANCE + .1 && elapsedRunTime.time() > 3) {
                         done = true;
                     }
 
@@ -280,7 +302,6 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 drive.moveRobot(power, strafe, turn);
                 sleep(10);
 
-
             }
             drive.followTrajectory(trajRight2);
 
@@ -291,6 +312,40 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         sleep(10000);
 
 
+    }
+
+    private void setManualExposure(int exposureMS, int gain, VisionPortal visionPortal) {
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+        }
     }
 
 }

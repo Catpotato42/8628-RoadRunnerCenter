@@ -31,12 +31,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +86,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public Servo grabberServo;
     public Servo droneServo;
     public Servo hangerServo;
+    public WebcamName Webcam1;
 
     public RevColorSensorV3 colorBack;
     public RevColorSensorV3 colorLeft;
@@ -126,6 +131,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         backLeft = hardwareMap.get(DcMotorEx.class, "lb");
         backRight = hardwareMap.get(DcMotorEx.class, "rb");
         frontRight = hardwareMap.get(DcMotorEx.class, "rf");
+
+        //webcam
+        Webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //sensors
         colorBack = hardwareMap.get(RevColorSensorV3.class, "colorFront");
@@ -193,6 +201,55 @@ public class SampleMecanumDrive extends MecanumDrive {
     public double Sense (RevColorSensorV3 sensor) {
         return sensor.getDistance(DistanceUnit.INCH);
 
+    }
+
+
+
+    public void initAprilTag(AprilTagProcessor aprilTag, VisionPortal visionPortal) {
+        // Create the AprilTag processor by using a builder.
+        aprilTag = new AprilTagProcessor.Builder().build();
+
+        // Adjust Image Decimation to trade-off detection-range for detection-rate.
+        // eg: Some typical detection data using a Logitech C920 WebCam
+        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
+        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
+        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
+        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
+        // Note: Decimation can be changed on-the-fly to adapt during a match.
+        aprilTag.setDecimation(2);
+
+        // Create the vision portal by using a builder.
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(Webcam1)
+                    .addProcessor(aprilTag)
+                    .build();
+
+    }
+
+    public void moveRobot(double x, double y, double yaw) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x -y -yaw;
+        double rightFrontPower   =  x +y +yaw;
+        double leftBackPower     =  x +y -yaw;
+        double rightBackPower    =  x -y +yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        frontLeft.setPower(leftFrontPower);
+        frontRight.setPower(rightFrontPower);
+        backLeft.setPower(leftBackPower);
+        backRight.setPower(rightBackPower);
     }
 
     public void turnAsync(double angle) {

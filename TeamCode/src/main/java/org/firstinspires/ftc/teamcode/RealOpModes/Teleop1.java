@@ -53,16 +53,16 @@ public class Teleop1 extends OpMode {
             }
 
             if (gamepad2.right_bumper && drive.xRailRot.getCurrentPosition() < (xRailRotMin+10)) {
-                drive.setXrailPower(0.75 * gamepad2.right_stick_y, 0.75 * gamepad2.left_stick_y);
+                drive.setXrailPower(0.75 * gamepad2.right_stick_y, 0.75 * -gamepad2.left_stick_y);
                 telemetry.addData("takin it slow ;", 0);
             } else if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+10)) {
-                drive.setXrailPower(gamepad2.right_stick_y, gamepad2.left_stick_y);
+                drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("normal :", 0);
             } else if (gamepad2.left_bumper) {
-                drive.setXrailPower(gamepad2.right_stick_y, gamepad2.left_stick_y);
+                drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("override :", 8);
             } else {
-                drive.setXrailPower(-0.1, gamepad2.left_stick_y);
+                drive.setXrailPower(-0.1, -gamepad2.left_stick_y);
                 telemetry.addData("goin up :( ZER", 0);
             }
             //start

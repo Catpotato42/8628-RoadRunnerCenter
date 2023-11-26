@@ -133,14 +133,6 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
             drive.followTrajectory(trajBack2);
-            /*drive.turn(-Math.toRadians(90));
-            drive.followTrajectory(trajBack1);
-            telemetry.addData("Back park", backSense);
-            telemetry.update();
-            sleep(1000);
-            while(drive.xRailRot.getCurrentPosition() > xRailRotMin) {
-                drive.setXrailPower(.5, 0);
-            }*/
         } else if (leftSense <2.9) { //if team object is on the RIGHT
             telemetry.addData("Left", leftSense);
             telemetry.update();
@@ -157,7 +149,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
-            //drive.followTrajectory(trajLeft2);
+            drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the LEFT
             telemetry.addData("Right", leftSense);
@@ -176,76 +168,6 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
-            /*while (done == false) {
-                telemetry.addData("while: ", 0);
-                telemetry.update();
-                sleep(1000);
-                List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-                for (AprilTagDetection detection : currentDetections) {
-                    // Look to see if we have size info on this tag.
-                    if (detection.metadata != null) {
-                        //  Check to see if we want to track towards this tag.
-                        if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                            // Yes, we want to use this tag.
-                            targetFound = true;
-                            desiredTag = detection;
-                            telemetry.addData("Tagid: ", detection.id);
-                            break;  // don't look any further.
-                        } else {
-                            // This tag is in the library, but we do not want to track it right now.
-                            telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                        }
-                    } else {
-                        // This tag is NOT in the library, so we don't have enough information to track to it.
-                        telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-                    }
-                }
-                telemetry.update();
-
-                // Tell the driver what we see, and what to do.
-                if (targetFound) {
-                    telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-                    telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                    telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                    telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-                    telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-                } else {
-                    telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-                }
-
-                // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-                if (targetFound) {
-                    telemetry.addData("target found: ", 0);
-
-                    // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                    double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                    double  headingError    = desiredTag.ftcPose.bearing;
-                    double  yawError        = desiredTag.ftcPose.yaw;
-                    if (rangeError < DESIRED_DISTANCE + .1 && elapsedRunTime.time() > 3) {
-                        done = true;
-                    }
-
-                    // Use the speed and turn "gains" to calculate how we want the robot to move.
-                    power  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                    turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-                    strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-                    telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-                } else {
-
-                    // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-                    power  = 0;  // Reduce drive rate to 50%.
-                    strafe = 0;  // Reduce strafe rate to 50%.
-                    turn   = 0;  // Reduce turn rate to 33%.
-                    telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-                }
-                telemetry.update();
-
-                // Apply desired axes motions to the drivetrain.
-                drive.moveRobot(power, strafe, turn);
-                sleep(10);
-
-            }*/
             drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk

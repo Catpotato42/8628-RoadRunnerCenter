@@ -34,9 +34,6 @@ public class BlueAudienceAuto extends LinearOpMode {
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
                 .lineTo(new Vector2d(-30, 0))
                 .build();
-        Trajectory trajBack1 = drive.trajectoryBuilder(new Pose2d(-25, 0))
-                .lineTo(new Vector2d(-40, 40))
-                .build();
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
                 .lineTo(new Vector2d(-26.5, -3.5)) //placeholder
                 .build();
@@ -53,25 +50,16 @@ public class BlueAudienceAuto extends LinearOpMode {
             drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(180));
             drive.followTrajectory(trajBack0);
-            drive.grabberServo(1);
+            drive.grabberServoFront(1);
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
-            /*drive.turn(-Math.toRadians(90));
-            drive.followTrajectory(trajBack1);
-            telemetry.addData("Back park", backSense);
-            telemetry.update();
-            sleep(1000);
-            while(drive.xRailRot.getCurrentPosition() > xRailRotMin) {
-                drive.setXrailPower(.5, 0);
-            }*/
         } else if (leftSense <2.9) { //if team object is on the LEFT
             telemetry.addData("Left", leftSense);
             telemetry.update();
-            //drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(90));
             drive.followTrajectory(trajLeft0);
-            drive.grabberServo(1);
+            drive.grabberServoFront(1);
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
@@ -79,10 +67,9 @@ public class BlueAudienceAuto extends LinearOpMode {
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the RIGHT
             telemetry.addData("Right", leftSense);
             telemetry.update();
-            //drive.followTrajectory(trajBack);
             drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajRight0);
-            drive.grabberServo(1);
+            drive.grabberServoFront(1);
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);

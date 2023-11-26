@@ -1,16 +1,18 @@
-package org.firstinspires.ftc.teamcode.RealOpModes;
+package org.firstinspires.ftc.teamcode.drive.DeprecatedOpModes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class RedBackstageAutoPark extends LinearOpMode {
+@Disabled
+public class BlueBackstageAutoPark extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,33 +35,33 @@ public class RedBackstageAutoPark extends LinearOpMode {
                 .lineTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
-                .lineTo(new Vector2d(-31, 0))
+                .lineTo(new Vector2d(-30, 0))
                 .build();
         Trajectory trajBack1 = drive.trajectoryBuilder(trajBack0.end())
                 .strafeTo(new Vector2d(-20, 0))
                 .build();
         Trajectory trajBack2 = drive.trajectoryBuilder(trajBack1.end())
-                .strafeTo(new Vector2d(-5, 40))
+                .strafeTo(new Vector2d(-5, -40))
                 .build();
 
-        Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, -3.5)) //placeholder
+        Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-26.5, 0, -Math.toRadians(90)))
+                .lineTo(new Vector2d(-26.5, -3.5)) //placeholder
                 .build();
         Trajectory trajRight1 = drive.trajectoryBuilder(trajRight0.end())
                 .strafeTo(new Vector2d(-25, 6))
                 .build();
         Trajectory trajRight2 = drive.trajectoryBuilder(trajRight1.end())
-                .strafeTo(new Vector2d(-5, 40))
+                .strafeTo(new Vector2d(-5, -40))
                 .build();
 
-        Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
-                .lineTo(new Vector2d(-29.5, 3.7)) //placeholder
+        Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-26.5, 0, Math.toRadians(90)))
+                .lineTo(new Vector2d(-26.5, 3.5)) //placeholder
                 .build();
         Trajectory trajLeft1 = drive.trajectoryBuilder(trajLeft0.end())
                 .strafeTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeft1.end())
-                .strafeTo(new Vector2d(-5, 40))
+                .strafeTo(new Vector2d(-5, -40))
                 .build();
 
         drive.followTrajectory(traj1);

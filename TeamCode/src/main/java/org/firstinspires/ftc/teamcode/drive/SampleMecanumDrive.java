@@ -86,7 +86,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public DcMotorEx xRailRot, xRailExt;
 
-    public Servo grabberServo;
+    public Servo grabberServoFront;
+    public Servo grabberServoBack;
     public Servo droneServo;
     public Servo hangerServo;
     public WebcamName Webcam1;
@@ -143,7 +144,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         colorLeft = hardwareMap.get(RevColorSensorV3.class, "colorLeft");
 
         //servos
-        grabberServo = hardwareMap.get(Servo.class, "grabberServo");
+        grabberServoFront = hardwareMap.get(Servo.class, "grabberServoFront");
+        grabberServoFront = hardwareMap.get(Servo.class, "grabberServoBack");
         droneServo = hardwareMap.get(Servo.class, "droneServo");
         hangerServo = hardwareMap.get(Servo.class, "hangerServo");
         motors = Arrays.asList(frontLeft, backLeft, backRight, frontRight);
@@ -268,8 +270,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         xRailExt.setPower(Ext);
     }
 
-    public void grabberServo (double v) {
-        grabberServo.setPosition(v);
+    public void grabberServoFront (double v) {
+        grabberServoFront.setPosition(v);
+    }
+    public void grabberServoBack (double v) {
+        grabberServoBack.setPosition(v);
     }
 
     public void turn(double angle) {

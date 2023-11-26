@@ -52,10 +52,7 @@ public class Teleop1 extends OpMode {
                 drive.mecanumDrive(-0.25 * gamepad1.right_stick_y, 0.25 * gamepad1.right_stick_x, 0.25 * gamepad1.left_stick_x);
             }
 
-            if (gamepad2.right_bumper && drive.xRailRot.getCurrentPosition() < (xRailRotMin+10)) {
-                drive.setXrailPower(0.75 * gamepad2.right_stick_y, 0.75 * -gamepad2.left_stick_y);
-                telemetry.addData("takin it slow ;", 0);
-            } else if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+10)) {
+            if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+10)) {
                 drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("normal :", 0);
             } else if (gamepad2.left_bumper) {
@@ -68,28 +65,46 @@ public class Teleop1 extends OpMode {
             //start
             //This code below may be useful for coding our intake and drops
             if (gamepad1.dpad_up) {
-                drive.droneServo.setPosition(1);
+                drive.droneServo.setPosition(1); //shoot drone
             } else if (gamepad2.dpad_down) {
-                drive.hangerServo.setPosition(1);
+                drive.hangerServo.setPosition(1); //release hanger
             } else if (gamepad1.dpad_left) {
-                drive.droneServo.setPosition(0);
+                drive.droneServo.setPosition(0); //reset drone servo
             } else if (gamepad2.dpad_right) {
-                drive.hangerServo.setPosition(0);
+                drive.hangerServo.setPosition(0); //reset hanger
+            }
+
+
+            // open servo
+            if (gamepad1.y && drive.grabberServoFront.getPosition() <.5) {
+                drive.grabberServoFront(1); //release
+            } else if (gamepad1.y) {
+                drive.grabberServoFront(0); //grab
+            } else if (gamepad1.x && drive.grabberServoBack.getPosition() <.5) {
+                drive.grabberServoBack(1); //release
+            } else if (gamepad1.x) {
+                drive.grabberServoBack(0); //grab
             }
 
             // open servo
-            if (gamepad2.y) {
-            drive.grabberServo(1); //release
+            if (gamepad2.y && drive.grabberServoFront.getPosition() <.5) {
+                drive.grabberServoFront(1); //release
+            } else if (gamepad2.y) {
+                drive.grabberServoFront(0); //grab
+            } else if (gamepad2.x && drive.grabberServoBack.getPosition() <.5) {
+                drive.grabberServoBack(1); //release
             } else if (gamepad2.x) {
-            drive.grabberServo(0); //grab
+                drive.grabberServoBack(0); //grab
             } else if (gamepad2.a) {
-                Sensed = drive.Sense(drive.colorBack); //test1
-                sensedColor = drive.colorBack.green();
-                telemetry.addData("Distance: ", Sensed);
-                telemetry.addData("Distance: ", sensedColor);
+
             } else if (gamepad2.b) {
+
+            } else if (gamepad2.dpad_left) {
                 drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                xRailRotMin = drive.xRailRot.getCurrentPosition();
+                drive.xRailExt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                drive.xRailExt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 xRailRotMin = drive.xRailRot.getCurrentPosition();
                 Infractions++;
                 telemetry.addData("Reset encoders: ", Infractions);

@@ -7,15 +7,43 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 @Autonomous
 public class BlueBackstageAutoAprilPark extends LinearOpMode {
 
+    double DESIRED_DISTANCE = 15.0; //  this is how close the camera should get to the target (inches)
+
+    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
+    //  applied to the drive motors to correct the error.
+    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
+    double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
+    double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
+    double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
+    boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
+    //set this for each part of the opmode
+    int DESIRED_TAG_ID = 6;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    VisionPortal visionPortal = null;               // Used to manage the video source.
+    AprilTagProcessor aprilTag = null;              // Used for managing the AprilTag detection process.
+    AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+    boolean targetFound     = false;    // Set to true when an AprilTag target is detected
+    double  power           = 0;        // Desired forward power/speed (-1 to +1)
+    double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
+    double  turn            = 0;        // Desired turning power/speed (-1 to +1)
+    boolean done = false;
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -23,31 +51,16 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
         drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double xRailRotMin = drive.xRailRot.getCurrentPosition();
+        ElapsedTime elapsedRunTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
-        double DESIRED_DISTANCE = 19.0; //  this is how close the camera should get to the target (inches)
-        ElapsedTime elapsedRunTime = new ElapsedTime();
 
-        //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
-        //  applied to the drive motors to correct the error.
-        //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-        double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-        double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-        double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-        double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-        double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-        double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-        boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-        //set this for each part of the opmode
-        int DESIRED_TAG_ID = 6;     // Choose the tag you want to approach or set to -1 for ANY tag.
-        VisionPortal visionPortal = null;               // Used to manage the video source.
-        AprilTagProcessor aprilTag = null;              // Used for managing the AprilTag detection process.
-        AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-        boolean targetFound     = false;    // Set to true when an AprilTag target is detected
-        double  power           = 0;        // Desired forward power/speed (-1 to +1)
-        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-        boolean done = false;
-        drive.initAprilTag(aprilTag, visionPortal);
+        aprilTag = new AprilTagProcessor.Builder().build();
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(drive.Webcam1)
+                .addProcessor(aprilTag)
+                .build();
+
+        setManualExposure(6, 250, visionPortal);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -97,6 +110,7 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
         if (backSense < 2.9) { //if team object is at the BACK
             telemetry.addData("Back", backSense);
             telemetry.update();
+            DESIRED_TAG_ID = 2;
             drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(180));
             drive.followTrajectory(trajBack0);
@@ -105,18 +119,15 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
             sleep(1000);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
+            elapsedRunTime.reset();
+            telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
+            AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
             drive.followTrajectory(trajBack2);
-            /*drive.turn(-Math.toRadians(90));
-            drive.followTrajectory(trajBack1);
-            telemetry.addData("Back park", backSense);
-            telemetry.update();
-            sleep(1000);
-            while(drive.xRailRot.getCurrentPosition() > xRailRotMin) {
-                drive.setXrailPower(.5, 0);
-            }*/
+
         } else if (leftSense <2.9) { //if team object is on the LEFT
             telemetry.addData("Left", leftSense);
             telemetry.update();
+            DESIRED_TAG_ID = 3;
             //drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(90));
             drive.followTrajectory(trajLeft0);
@@ -125,11 +136,15 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
             sleep(1000);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
+            elapsedRunTime.reset();
+            telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
+            AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
             drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the RIGHT
             telemetry.addData("Right", leftSense);
             telemetry.update();
+            DESIRED_TAG_ID = 1;
             //drive.followTrajectory(trajBack);
             drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajRight0);
@@ -138,6 +153,9 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
             sleep(1000);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
+            elapsedRunTime.reset();
+            telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
+            AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
             drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk
@@ -147,6 +165,118 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
         sleep(10000);
 
 
+    }
+
+    private void AprilRun(int DESIRED_TAG_ID, ElapsedTime elapsedRunTime, SampleMecanumDrive drive) {
+        while (done == false && opModeIsActive()) {
+            telemetry.addData("while: ", 0);
+            telemetry.update();
+
+            targetFound = false;
+            desiredTag  = null;
+            //this next line has problems
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                telemetry.addData("line: ", 156);
+                // Look to see if we have size info on this tag.
+                if (detection.metadata != null) {
+                    //  Check to see if we want to track towards this tag.
+                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                        // Yes, we want to use this tag.
+                        targetFound = true;
+                        desiredTag = detection;
+                        telemetry.addData("Tagid: ", detection.id);
+                        telemetry.update();
+                        // don't look any further.
+                        break;
+                    } else {
+                        // This tag is in the library, but we do not want to track it right now.
+                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                    }
+                } else {
+                    // This tag is NOT in the library, so we don't have enough information to track to it.
+                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+                }
+            }
+            telemetry.update();
+            //telemetry.addData("here: ", targetFound);
+            //telemetry.addData("desiredTag: ", desiredTag.id);
+
+            // Tell the driver what we see, and what to do.
+            if (desiredTag != null) {
+                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+                telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+                telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+                telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+            }
+            telemetry.update();
+            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+            double rangeError = 50;
+            if (targetFound) {
+
+
+                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+                double  headingError    = desiredTag.ftcPose.bearing;
+                double  yawError        = desiredTag.ftcPose.yaw;
+
+                // Use the speed and turn "gains" to calculate how we want the robot to move.
+                power  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            } else {
+                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+                power  = 0;  // Reduce drive rate to 50%.
+                strafe = 0;  // Reduce strafe rate to 50%.
+                turn   = 0;  // Reduce turn rate to 33%.
+            }
+            if (rangeError < DESIRED_DISTANCE + .1 && elapsedRunTime.time(TimeUnit.SECONDS) > 5) {
+                done = true;
+            }
+            telemetry.update();
+            telemetry.addData("here: ", 213);
+
+
+            // Apply desired axes motions to the drivetrain.
+            drive.moveRobot(power, strafe, turn);
+
+
+        }
+
+    }
+
+    private void setManualExposure(int exposureMS, int gain, VisionPortal visionPortal) {
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+        }
     }
 
 }

@@ -107,6 +107,7 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
         drive.followTrajectory(traj1);
         double backSense = drive.Sense(drive.colorBack);
         double leftSense = drive.Sense(drive.colorLeft);
+        drive.hangerServo.setPosition(1);
         if (backSense < 2.9) { //if team object is at the BACK
             telemetry.addData("Back", backSense);
             telemetry.update();

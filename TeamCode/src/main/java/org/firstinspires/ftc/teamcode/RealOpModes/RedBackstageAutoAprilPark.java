@@ -45,6 +45,11 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     boolean done = false;
+    double i = 0;
+    Pose2d postPose;
+
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,8 +88,11 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         Trajectory trajBack1 = drive.trajectoryBuilder(trajBack0.end())
                 .strafeTo(new Vector2d(-20, 0))
                 .build();
-        Trajectory trajBack2 = drive.trajectoryBuilder(trajBack1.end(), -Math.toRadians(90))
-                .strafeTo(new Vector2d(-5, 40))
+        Trajectory trajBackAdjust = drive.trajectoryBuilder(trajBack1.end())
+                .strafeTo(new Vector2d(-15, i))
+                .build();
+        Trajectory trajBack2 = drive.trajectoryBuilder(trajBackAdjust.end())
+                .strafeTo(new Vector2d(5, -10)) //check this
                 .build();
 
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
@@ -93,11 +101,11 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         Trajectory trajRight1 = drive.trajectoryBuilder(trajRight0.end())
                 .strafeTo(new Vector2d(-25, 6))
                 .build();
-        Trajectory trajRightApril = drive.trajectoryBuilder(trajRight1.end())
-                .strafeTo(new Vector2d(-20, 10))
+        Trajectory trajRightAdjust = drive.trajectoryBuilder(new Pose2d())
+                .strafeTo(new Vector2d(-20, i))
                 .build();
-        Trajectory trajRight2 = drive.trajectoryBuilder(trajRightApril.end(), Math.toRadians(180))
-                .strafeTo(new Vector2d(-5, 40))
+        Trajectory trajRight2 = drive.trajectoryBuilder(trajRightAdjust.end())
+                .strafeTo(new Vector2d(5, -10))
                 .build();
 
         Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
@@ -105,17 +113,12 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 .build();
         Trajectory trajLeft1 = drive.trajectoryBuilder(trajLeft0.end())
                 .strafeTo(new Vector2d(-25, 0))
-                .build();
-        Trajectory trajLeftApril = drive.trajectoryBuilder(trajLeft1.end())
-                .strafeTo(new Vector2d(-20, 10))
-                .build();
-        Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftApril.end())
-                .strafeTo(new Vector2d(-5, 40))
-                .build();
+                .build(); //this is where the robot starts to scan apriltag
 
         drive.followTrajectory(traj1);
         double backSense = drive.Sense(drive.colorBack);
         double leftSense = drive.Sense(drive.colorLeft);
+        drive.hangerServo.setPosition(1);
         if (backSense < 2.9) { //if team object is at the BACK
             telemetry.addData("Back", backSense);
             DESIRED_TAG_ID = 5;
@@ -132,6 +135,16 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
+            drive.updatePoseEstimate();
+            postPose = drive.getPoseEstimate();
+            i = postPose.getY();
+            telemetry.addData("Position i: ", drive.getPoseEstimate());
+            telemetry.update();
+            sleep(1000);
+            drive.followTrajectory(trajBackAdjust);
+            telemetry.addData("Position e: ", drive.getPoseEstimate());
+            telemetry.update();
+            sleep(1000); //temporary
             drive.followTrajectory(trajBack2);
         } else if (leftSense <2.9) { //if team object is on the RIGHT
             telemetry.addData("Left", leftSense);
@@ -145,10 +158,25 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             //sleep(1000);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
-            //drive.followTrajectory(trajLeftApril);
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
+            drive.updatePoseEstimate();
+            postPose = drive.getPoseEstimate();
+            i = postPose.getY();
+            Trajectory trajLeftAdjust = drive.trajectoryBuilder(trajLeft1.end(), Math.toRadians(90))
+                    .strafeTo(new Vector2d(-20, i))
+                    .build();
+            Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
+                    .strafeTo(new Vector2d(5, -10))
+                    .build();
+            telemetry.addData("Position i: ", drive.getPoseEstimate());
+            telemetry.update();
+            sleep(1000);
+            drive.followTrajectory(trajLeftAdjust);
+            telemetry.addData("Position e: ", drive.getPoseEstimate());
+            telemetry.update();
+            sleep(1000); //temporary
             drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the LEFT
@@ -163,11 +191,20 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             //sleep(1000);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
-            //drive.followTrajectory(trajRightApril);
             drive.turn(Math.toRadians(180));
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
+            drive.updatePoseEstimate();
+            postPose = drive.getPoseEstimate();
+            i = postPose.getY();
+            telemetry.addData("Position i: ", drive.getPoseEstimate());
+            telemetry.update();
+            sleep(1000);
+            drive.followTrajectory(trajRightAdjust);
+            telemetry.addData("Position e: ", drive.getPoseEstimate());
+            telemetry.update();
+            sleep(1000); //temporary
             drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk

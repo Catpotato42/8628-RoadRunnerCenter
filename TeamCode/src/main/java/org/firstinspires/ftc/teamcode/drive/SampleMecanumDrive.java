@@ -145,7 +145,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         //servos
         grabberServoFront = hardwareMap.get(Servo.class, "grabberServoFront");
-        grabberServoFront = hardwareMap.get(Servo.class, "grabberServoBack");
+        grabberServoBack = hardwareMap.get(Servo.class, "grabberServoBack");
         droneServo = hardwareMap.get(Servo.class, "droneServo");
         hangerServo = hardwareMap.get(Servo.class, "hangerServo");
         motors = Arrays.asList(frontLeft, backLeft, backRight, frontRight);

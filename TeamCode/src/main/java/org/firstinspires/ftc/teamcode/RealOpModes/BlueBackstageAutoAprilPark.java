@@ -114,7 +114,7 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(180));
             drive.followTrajectory(trajBack0);
-            drive.grabberServo(1);
+            drive.grabberServoFront(1);
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
@@ -131,7 +131,7 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
             //drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(90));
             drive.followTrajectory(trajLeft0);
-            drive.grabberServo(1);
+            drive.grabberServoFront(1);
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
@@ -148,7 +148,7 @@ public class BlueBackstageAutoAprilPark extends LinearOpMode {
             //drive.followTrajectory(trajBack);
             drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajRight0);
-            drive.grabberServo(1);
+            drive.grabberServoFront(1);
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);

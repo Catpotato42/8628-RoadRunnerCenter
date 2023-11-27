@@ -24,6 +24,7 @@ public class Teleop1 extends OpMode {
 
             xRailPower = 1;
 
+
         }
 
 
@@ -41,6 +42,10 @@ public class Teleop1 extends OpMode {
                 telemetry.addData("I ran ", drive.xRailRot.getCurrentPosition());
                 telemetry.update();
                 xRailRotMin = drive.xRailRot.getCurrentPosition();
+                drive.grabberServoFront(1);
+                drive.grabberServoBack(1);
+
+                
                 StartTime = false;
             }
             //mecanum drive w/ precision mode
@@ -105,7 +110,7 @@ public class Teleop1 extends OpMode {
                 xRailRotMin = drive.xRailRot.getCurrentPosition();
                 drive.xRailExt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 drive.xRailExt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                xRailRotMin = drive.xRailRot.getCurrentPosition();
+                //xRailRotMin = drive.xRailRot.getCurrentPosition();
                 Infractions++;
                 telemetry.addData("Reset encoders: ", Infractions);
             }

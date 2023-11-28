@@ -42,8 +42,6 @@ public class Teleop1 extends OpMode {
                 telemetry.addData("I ran ", drive.xRailRot.getCurrentPosition());
                 telemetry.update();
                 xRailRotMin = drive.xRailRot.getCurrentPosition();
-                drive.grabberServoFront(1);
-                drive.grabberServoBack(1);
                 StartTime = false;
             }
             //mecanum drive w/ precision mode
@@ -70,7 +68,7 @@ public class Teleop1 extends OpMode {
             if (gamepad1.dpad_up) {
                 drive.droneServo.setPosition(1); //shoot drone
             } else if (gamepad2.dpad_down) {
-                drive.hangerServo.setPosition(1); //release hanger
+                drive.hangerServo.setPosition(0); //release hanger
             } else if (gamepad1.dpad_left) {
                 drive.droneServo.setPosition(0); //reset drone servo
             }

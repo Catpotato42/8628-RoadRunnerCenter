@@ -31,7 +31,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
     double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-    double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
+    double MAX_AUTO_SPEED = 0.8;   //  Clip the approach speed to this max value (adjust for your robot)
     double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
     boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
@@ -116,8 +116,8 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.turn(Math.toRadians(180));
             drive.followTrajectory(trajBack0);
             //drive.grabberServo(1);
-            //drive.setXrailPower(-.5,0);
-            //sleep(1000);
+            //drive.setXrailPower(-1,0);
+            //sleep(500);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
             drive.turn(-Math.toRadians(90));
@@ -139,13 +139,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajBackAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
-            drive.setXrailPower(-1, 0);
-            sleep(1000);
-            drive.setXrailPower(-1, .7);
-            sleep(1500);
-            drive.setXrailPower(0, .5);
-            sleep(1000);
-            drive.setXrailPower(0, 0);
+            placeYellow(drive);
             //drive.followTrajectory(trajBack2);
 
         } else if (leftSense <2.9) { //if team object is on the RIGHT
@@ -153,12 +147,11 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             telemetry.update();
             DESIRED_TAG_ID = 6;
             drive.hangerServo.setPosition(0);
-            //drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(90));
             drive.followTrajectory(trajLeft0);
-            //drive.grabberServoFront(1);
-            //drive.setXrailPower(-.5,0);
-            //sleep(1000);
+            //drive.grabberServo(1);
+            //drive.setXrailPower(-1,0);
+            //sleep(500);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
             elapsedRunTime.reset();
@@ -179,13 +172,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajLeftAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
-            drive.setXrailPower(-1, 0);
-            sleep(1000);
-            drive.setXrailPower(-1, .7);
-            sleep(1500);
-            drive.setXrailPower(0, .5);
-            sleep(1000);
-            drive.setXrailPower(0, 0);
+            placeYellow(drive);
             //drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the LEFT
@@ -196,9 +183,9 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             //drive.followTrajectory(trajBack);
             drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajRight0);
-            //drive.grabberServoFront(1);
-            //drive.setXrailPower(-.5,0);
-            //sleep(1000);
+            //drive.grabberServo(1);
+            //drive.setXrailPower(-1,0);
+            //sleep(500);
             //drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
             drive.turn(Math.toRadians(180));
@@ -220,14 +207,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajRightAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
-            drive.setXrailPower(-1, 0);
-            sleep(1000);
-            drive.setXrailPower(-1, .7);
-            sleep(1500);
-            drive.setXrailPower(0, .5);
-            sleep(1000);
-            drive.setXrailPower(0, 0);
-            drive.grabberServoBack(1);
+            placeYellow(drive);
             //drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk
@@ -241,9 +221,6 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
 
     private void AprilRun(int DESIRED_TAG_ID, ElapsedTime elapsedRunTime, SampleMecanumDrive drive) {
         while (done == false && opModeIsActive()) {
-            telemetry.addData("while: ", 0);
-            telemetry.update();
-
             targetFound = false;
             desiredTag  = null;
             //this next line has problems
@@ -282,7 +259,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
             }
             telemetry.update();
-            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+            //Drive to target Automatically
             double rangeError = 50;
             if (targetFound) {
 
@@ -297,7 +274,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
             } else {
-                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+                // don't
                 power  = 0;  // Reduce drive rate to 50%.
                 strafe = 0;  // Reduce strafe rate to 50%.
                 turn   = 0;  // Reduce turn rate to 33%.
@@ -349,6 +326,21 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             gainControl.setGain(gain);
             sleep(20);
         }
+    }
+
+    private void placeYellow (SampleMecanumDrive drive) {
+        drive.setXrailPower(-1, 0);
+        sleep(500);
+        drive.setXrailPower(-1, .7);
+        sleep(1000);
+        drive.setXrailPower(0, 1);
+        sleep(750);
+        drive.setXrailPower(0, 0);
+        drive.grabberServoBack(1);
+        sleep(200); //removable
+        drive.setXrailPower(0, -1);
+        sleep(500);
+        drive.setXrailPower(0, 0);
     }
 
 }

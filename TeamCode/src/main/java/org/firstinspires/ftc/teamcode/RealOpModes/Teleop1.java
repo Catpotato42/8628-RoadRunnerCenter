@@ -18,6 +18,7 @@ public class Teleop1 extends OpMode {
         double sensedColor;
         private ElapsedTime elapsedRunTime = new ElapsedTime();
         double xRailRotMin;
+        double xRailExtMax;
         boolean StartTime = true;
         int Infractions = 0;
         public void init() {
@@ -41,7 +42,8 @@ public class Teleop1 extends OpMode {
                 drive.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //REDUNDANCY!!!
                 telemetry.addData("I ran ", drive.xRailRot.getCurrentPosition());
                 telemetry.update();
-                xRailRotMin = drive.xRailRot.getCurrentPosition();
+                xRailRotMin = 0;
+                xRailExtMax = 9200;
                 StartTime = false;
             }
             //mecanum drive w/ precision mode
@@ -53,7 +55,7 @@ public class Teleop1 extends OpMode {
                 drive.mecanumDrive(-0.25 * gamepad1.right_stick_y, 0.25 * gamepad1.right_stick_x, 0.25 * gamepad1.left_stick_x);
             }
 
-            if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+10)) {
+            if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3)) {
                 drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("normal :", 0);
             } else if (gamepad2.left_bumper) {

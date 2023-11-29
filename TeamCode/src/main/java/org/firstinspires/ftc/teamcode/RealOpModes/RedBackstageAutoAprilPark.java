@@ -115,10 +115,10 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(180));
             drive.followTrajectory(trajBack0);
-            //drive.grabberServo(1);
-            //drive.setXrailPower(-1,0);
-            //sleep(500);
-            //drive.setXrailPower(0,0);
+            drive.grabberServoFront(1);
+            drive.setXrailPower(-1,0);
+            sleep(500);
+            drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
             drive.turn(-Math.toRadians(90));
             elapsedRunTime.reset();
@@ -149,10 +149,10 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.hangerServo.setPosition(0);
             drive.turn(Math.toRadians(90));
             drive.followTrajectory(trajLeft0);
-            //drive.grabberServo(1);
-            //drive.setXrailPower(-1,0);
-            //sleep(500);
-            //drive.setXrailPower(0,0);
+            drive.grabberServoFront(1);
+            drive.setXrailPower(-1,0);
+            sleep(500);
+            drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
@@ -183,10 +183,10 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             //drive.followTrajectory(trajBack);
             drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajRight0);
-            //drive.grabberServo(1);
-            //drive.setXrailPower(-1,0);
-            //sleep(500);
-            //drive.setXrailPower(0,0);
+            drive.grabberServoFront(1);
+            drive.setXrailPower(-1,0);
+            sleep(500);
+            drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
             drive.turn(Math.toRadians(180));
             elapsedRunTime.reset();
@@ -214,7 +214,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             telemetry.addData("?????", leftSense);
         }
         telemetry.update();
-        sleep(10000);
+        sleep(3000);
 
 
     }
@@ -283,7 +283,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 done = true;
             }
             telemetry.update();
-            telemetry.addData("here: ", 213);
+            telemetry.addData("here: line ", 286);
 
 
             // Apply desired axes motions to the drivetrain.
@@ -330,9 +330,9 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
 
     private void placeYellow (SampleMecanumDrive drive) {
         drive.setXrailPower(-1, 0);
-        sleep(500);
-        drive.setXrailPower(-1, .7);
         sleep(1000);
+        drive.setXrailPower(-1, .7);
+        sleep(1200);
         drive.setXrailPower(0, 1);
         sleep(750);
         drive.setXrailPower(0, 0);

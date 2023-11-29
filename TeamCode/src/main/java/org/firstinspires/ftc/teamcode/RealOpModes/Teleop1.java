@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import java.util.concurrent.TimeUnit;
 
 
 @TeleOp(name = "Teleop1")
@@ -16,7 +17,8 @@ public class Teleop1 extends OpMode {
         double xRailPower;
         double Sensed;
         double sensedColor;
-        private ElapsedTime elapsedRunTime = new ElapsedTime();
+        private ElapsedTime elapsedRunTimeBack = new ElapsedTime();
+        private ElapsedTime elapsedRunTimeFront = new ElapsedTime();
         double xRailRotMin;
         double xRailExtMax;
         boolean StartTime = true;
@@ -77,24 +79,40 @@ public class Teleop1 extends OpMode {
 
 
             // open servo
-            if (gamepad1.y && drive.grabberServoFront.getPosition() <.5) {
+            if (gamepad1.y && drive.grabberServoFront.getPosition() <.5 && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeFront.reset();
+                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoFront(1); //release
-            } else if (gamepad1.y) {
+            } else if (gamepad1.y && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeFront.reset();
+                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoFront(0); //grab
-            } else if (gamepad1.x && drive.grabberServoBack.getPosition() <.5) {
+            } else if (gamepad1.x && drive.grabberServoBack.getPosition() <.5 && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeBack.reset();
+                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoBack(1); //release
-            } else if (gamepad1.x) {
+            } else if (gamepad1.x && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeBack.reset();
+                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoBack(0); //grab
             }
 
             // open servo
-            if (gamepad2.y && drive.grabberServoFront.getPosition() <.5) {
+            if (gamepad2.y && drive.grabberServoFront.getPosition() <.5 && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeFront.reset();
+                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoFront(1); //release
-            } else if (gamepad2.y) {
+            } else if (gamepad2.y && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeFront.reset();
+                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoFront(0); //grab
-            } else if (gamepad2.x && drive.grabberServoBack.getPosition() <.5) {
+            } else if (gamepad2.x && drive.grabberServoBack.getPosition() <.5 && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeBack.reset();
+                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoBack(1); //release
-            } else if (gamepad2.x) {
+            } else if (gamepad2.x && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+                elapsedRunTimeBack.reset();
+                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
                 drive.grabberServoBack(0); //grab
             } else if (gamepad2.a) {
 

@@ -286,6 +286,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             telemetry.addData("here: line ", 286);
 
 
+
             // Apply desired axes motions to the drivetrain.
             drive.moveRobot(power, strafe, turn);
 
@@ -334,7 +335,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         drive.setXrailPower(-1, .7);
         sleep(1200);
         drive.setXrailPower(0, 1);
-        sleep(750);
+        sleep(1700);
         drive.setXrailPower(0, 0);
         drive.grabberServoBack(1);
         sleep(200); //removable

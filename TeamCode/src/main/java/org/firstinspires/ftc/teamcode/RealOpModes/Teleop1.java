@@ -50,22 +50,27 @@ public class Teleop1 extends OpMode {
             }
             //mecanum drive w/ precision mode
             if (gamepad1.left_bumper) {
-                drive.mecanumDrive(-.7 * gamepad1.right_stick_y, .7 * gamepad1.right_stick_x, .7 * gamepad1.left_stick_x);
+                drive.mecanumDrive(-1 * gamepad1.right_stick_y, 1 * gamepad1.right_stick_x, 1 * gamepad1.left_stick_x);
             } else if (gamepad1.right_bumper) {
-                drive.mecanumDrive(-0.15 * gamepad1.right_stick_y, 0.15 * gamepad1.right_stick_x, 0.15 * gamepad1.left_stick_x);
-            } else {
                 drive.mecanumDrive(-0.25 * gamepad1.right_stick_y, 0.25 * gamepad1.right_stick_x, 0.25 * gamepad1.left_stick_x);
+            } else {
+                drive.mecanumDrive(-.5 * gamepad1.right_stick_y, 0.5 * gamepad1.right_stick_x, 0.5 * gamepad1.left_stick_x);
             }
 
-            if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3)) {
+            if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("normal :", 0);
-            } else if (gamepad2.left_bumper) {
+            } else if (gamepad2.left_bumper || gamepad2.right_bumper) {
                 drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("override :", 8);
-            } else {
+            } else if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() > (xRailExtMax - 3)) {
+                drive.setXrailPower(gamepad2.right_stick_y, -.5);
+                telemetry.addData("goin back :( ZER", 0);
+            } else if (drive.xRailRot.getCurrentPosition() > (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(-0.1, -gamepad2.left_stick_y);
                 telemetry.addData("goin up :( ZER", 0);
+            } else {
+                drive.setXrailPower(-0.1, -.5);
             }
             //start
             //This code below may be useful for coding our intake and drops
@@ -79,57 +84,63 @@ public class Teleop1 extends OpMode {
 
 
             // open servo
-            if (gamepad1.y && drive.grabberServoFront.getPosition() <.5 && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+            if (gamepad1.y && drive.grabberServoFront.getPosition() <.5 && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeFront.reset();
-                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoFront(1); //release
-            } else if (gamepad1.y && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+            } else if (gamepad1.y && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeFront.reset();
-                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoFront(0); //grab
-            } else if (gamepad1.x && drive.grabberServoBack.getPosition() <.5 && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+            } else if (gamepad1.x && drive.grabberServoBack.getPosition() <.5 && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeBack.reset();
-                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoBack(1); //release
-            } else if (gamepad1.x && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+            } else if (gamepad1.x && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeBack.reset();
-                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoBack(0); //grab
             }
 
             // open servo
-            if (gamepad2.y && drive.grabberServoFront.getPosition() <.5 && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+            if (gamepad2.y && drive.grabberServoFront.getPosition() <.5 && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeFront.reset();
-                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoFront(1); //release
-            } else if (gamepad2.y && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 100) {
+            } else if (gamepad2.y && (elapsedRunTimeFront.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeFront.reset();
-                telemetry.addData("Time: ", elapsedRunTimeFront.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoFront(0); //grab
-            } else if (gamepad2.x && drive.grabberServoBack.getPosition() <.5 && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+            } else if (gamepad2.x && drive.grabberServoBack.getPosition() <.5 && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeBack.reset();
-                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoBack(1); //release
-            } else if (gamepad2.x && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 100) {
+            } else if (gamepad2.x && (elapsedRunTimeBack.time(TimeUnit.MILLISECONDS)) > 200) {
                 elapsedRunTimeBack.reset();
-                telemetry.addData("Time: ", elapsedRunTimeBack.time(TimeUnit.NANOSECONDS));
+
                 drive.grabberServoBack(0); //grab
             } else if (gamepad2.a) {
 
             } else if (gamepad2.b) {
 
             } else if (gamepad2.dpad_left) {
+                telemetry.addData("Extender", drive.xRailExt.getCurrentPosition());
+                telemetry.addData("Rotater", drive.xRailRot.getCurrentPosition());
+                telemetry.update();
                 drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 xRailRotMin = drive.xRailRot.getCurrentPosition();
+                Infractions++;
+                telemetry.addData("Reset encoders: ", Infractions);
+            } else if (gamepad2.dpad_up) {
+                telemetry.addData("Extender", drive.xRailExt.getCurrentPosition());
+                telemetry.addData("Rotater", drive.xRailRot.getCurrentPosition());
+                telemetry.update();
                 drive.xRailExt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 drive.xRailExt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                //xRailRotMin = drive.xRailRot.getCurrentPosition();
+                xRailExtMax = drive.xRailExt.getCurrentPosition();
                 Infractions++;
                 telemetry.addData("Reset encoders: ", Infractions);
             }
-            telemetry.addData("Extender",drive.xRailExt.getCurrentPosition());
-            telemetry.addData("Rotater",drive.xRailRot.getCurrentPosition());
-            telemetry.update();
         }
 }

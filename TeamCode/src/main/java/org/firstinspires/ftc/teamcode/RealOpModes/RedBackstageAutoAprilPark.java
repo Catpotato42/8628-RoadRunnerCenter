@@ -83,7 +83,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
                 .lineTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
-                .lineTo(new Vector2d(-31, 0))
+                .lineTo(new Vector2d(-31.5, 0))
                 .build();
         Trajectory trajBack1 = drive.trajectoryBuilder(trajBack0.end())
                 .strafeTo(new Vector2d(-20, 0))
@@ -340,6 +340,8 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
         drive.grabberServoBack(1);
         sleep(200); //removable
         drive.setXrailPower(0, -1);
+        sleep(200);
+        drive.setXrailPower(-.3, -1);
         sleep(500);
         drive.setXrailPower(0, 0);
     }

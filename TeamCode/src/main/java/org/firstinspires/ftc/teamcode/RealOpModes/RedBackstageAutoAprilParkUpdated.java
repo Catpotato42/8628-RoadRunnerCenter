@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous
-public class RedBackstageAutoAprilPark extends LinearOpMode {
+public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
 
 
     double DESIRED_DISTANCE = 15.0; //  this is how close the camera should get to the target (inches)
@@ -117,7 +117,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajBack0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(500);
+            sleep(700);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
             drive.turn(-Math.toRadians(90));
@@ -151,7 +151,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajLeft0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(500);
+            sleep(700);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
             elapsedRunTime.reset();
@@ -185,7 +185,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
             drive.followTrajectory(trajRight0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(500);
+            sleep(700);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
             drive.turn(Math.toRadians(180));
@@ -331,7 +331,7 @@ public class RedBackstageAutoAprilPark extends LinearOpMode {
 
     private void placeYellow (SampleMecanumDrive drive) {
         drive.setXrailPower(-1, 0);
-        sleep(1000);
+        sleep(800);
         drive.setXrailPower(-1, .7);
         sleep(1200);
         drive.setXrailPower(0, 1);

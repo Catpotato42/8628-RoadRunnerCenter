@@ -28,14 +28,12 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    double SPEED_GAIN  =  0.03  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
     double MAX_AUTO_SPEED = 0.8;   //  Clip the approach speed to this max value (adjust for your robot)
-    double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-    boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    //set this for each part of the opmode
+    double MAX_AUTO_STRAFE= 0.7;   //  Clip the approach speed to this max value (adjust for your robot)
+    double MAX_AUTO_TURN  = 0.5;   //  Clip the turn speed to this max value (adjust for your robot)
     int DESIRED_TAG_ID = 6;     // Choose the tag you want to approach or set to -1 for ANY tag.
     VisionPortal visionPortal = null;               // Used to manage the video source.
     AprilTagProcessor aprilTag = null;              // Used for managing the AprilTag detection process.
@@ -67,7 +65,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .addProcessor(aprilTag)
                 .build();
 
-        setManualExposure(6, 250, visionPortal);
+        setManualExposure(5, 150, visionPortal);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -83,7 +81,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .lineTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
-                .lineTo(new Vector2d(-31.5, 0))
+                .lineTo(new Vector2d(-29.5, 0))
                 .build();
         Trajectory trajBack1 = drive.trajectoryBuilder(trajBack0.end())
                 .strafeTo(new Vector2d(-20, 0))
@@ -131,16 +129,15 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                     .strafeTo(new Vector2d(-23, i+11))
                     .build();
             Trajectory trajBack2 = drive.trajectoryBuilder(trajBackAdjust.end())
-                    .strafeTo(new Vector2d(-5, i)) //check this
+                    .strafeTo(new Vector2d(-2, i+11)) //check this
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
-            sleep(1000); //temporary
             drive.followTrajectory(trajBackAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            //drive.followTrajectory(trajBack2);
+            drive.followTrajectory(trajBack2);
 
         } else if (leftSense <2.9) { //if team object is on the RIGHT
             telemetry.addData("Left", leftSense);
@@ -164,16 +161,15 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                     .strafeTo(new Vector2d(-20, i+11))
                     .build();
             Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
-                    .strafeTo(new Vector2d(-5, i))
+                    .strafeTo(new Vector2d(-2, i+11))
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
-            sleep(1000);
             drive.followTrajectory(trajLeftAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            //drive.followTrajectory(trajLeft2);
+            drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the LEFT
             telemetry.addData("Right", leftSense);
@@ -199,16 +195,15 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                     .strafeTo(new Vector2d(-32, i+11))
                     .build();
             Trajectory trajRight2 = drive.trajectoryBuilder(trajRightAdjust.end())
-                    .strafeTo(new Vector2d(-5, i))
+                    .strafeTo(new Vector2d(-2, i+11))
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
-            sleep(1000);
             drive.followTrajectory(trajRightAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            //drive.followTrajectory(trajRight2);
+            drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk
             telemetry.addData("?????", leftSense);

@@ -27,15 +27,13 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    double SPEED_GAIN  =  0.04  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-    double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-    boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    //set this for each part of the opmode
-    int DESIRED_TAG_ID = 6;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    double MAX_AUTO_SPEED = 0.8;   //  Clip the approach speed to this max value (adjust for your robot)
+    double MAX_AUTO_STRAFE= 0.7;   //  Clip the approach speed to this max value (adjust for your robot)
+    double MAX_AUTO_TURN  = 0.5;   //  Clip the turn speed to this max value (adjust for your robot)
+    int DESIRED_TAG_ID = 1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     VisionPortal visionPortal = null;               // Used to manage the video source.
     AprilTagProcessor aprilTag = null;              // Used for managing the AprilTag detection process.
     AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
@@ -64,7 +62,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .addProcessor(aprilTag)
                 .build();
 
-        setManualExposure(6, 250, visionPortal);
+        setManualExposure(5, 150, visionPortal);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -79,7 +77,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .lineTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
-                .lineTo(new Vector2d(-31, 0))
+                .lineTo(new Vector2d(-30, 0))
                 .build();
         Trajectory trajBack1 = drive.trajectoryBuilder(trajBack0.end())
                 .strafeTo(new Vector2d(-20, 0))
@@ -90,7 +88,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .lineTo(new Vector2d(-27.5, -3.5))
                 .build();
         Trajectory trajRight1 = drive.trajectoryBuilder(trajRight0.end())
-                .strafeTo(new Vector2d(-25, -10))
+                .strafeTo(new Vector2d(-23, -10))
                 .build();
 
 
@@ -127,14 +125,13 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajBackAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(180))
-                    .strafeTo(new Vector2d(-23, i-11))
+                    .strafeTo(new Vector2d(-25, i-11))
                     .build();
             Trajectory trajBack2 = drive.trajectoryBuilder(trajBackAdjust.end())
-                    .strafeTo(new Vector2d(-5, i-11)) //check this
+                    .strafeTo(new Vector2d(-2, i-11)) //check this
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
-            sleep(1000); //temporary
             drive.followTrajectory(trajBackAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
@@ -164,11 +161,10 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                     .strafeTo(new Vector2d(-30, i-11)) //moves 5 inches to the right
                     .build();
             Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
-                    .strafeTo(new Vector2d(-5, i-11))
+                    .strafeTo(new Vector2d(-2, i-11))
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
-            sleep(1000);
             drive.followTrajectory(trajLeftAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
@@ -199,11 +195,10 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                     .strafeTo(new Vector2d(xPos-3, i-11))
                     .build();
             Trajectory trajRight2 = drive.trajectoryBuilder(trajRightAdjust.end())
-                    .strafeTo(new Vector2d(-5, i-11))
+                    .strafeTo(new Vector2d(-2, i-11))
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
-            sleep(1000);
             drive.followTrajectory(trajRightAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();

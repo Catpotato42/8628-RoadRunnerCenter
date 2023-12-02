@@ -45,7 +45,7 @@ public class Teleop1 extends OpMode {
                 telemetry.addData("I ran ", drive.xRailRot.getCurrentPosition());
                 telemetry.update();
                 xRailRotMin = 0;
-                xRailExtMax = 9200;
+                xRailExtMax = 9600;
                 StartTime = false;
             }
             //mecanum drive w/ precision mode

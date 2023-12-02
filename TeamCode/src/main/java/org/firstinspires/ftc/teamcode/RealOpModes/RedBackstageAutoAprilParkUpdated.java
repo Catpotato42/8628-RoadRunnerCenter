@@ -55,6 +55,8 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.xRailExt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.xRailExt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double xRailRotMin = drive.xRailRot.getCurrentPosition();
         ElapsedTime elapsedRunTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
@@ -115,7 +117,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajBack0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(700);
+            sleep(900);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
             drive.turn(-Math.toRadians(90));
@@ -148,7 +150,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajLeft0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(700);
+            sleep(900);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
             elapsedRunTime.reset();
@@ -181,7 +183,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajRight0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(700);
+            sleep(900);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
             drive.turn(Math.toRadians(180));
@@ -326,7 +328,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
 
     private void placeYellow (SampleMecanumDrive drive) {
         drive.setXrailPower(-1, 0);
-        sleep(800);
+        sleep(600);
         drive.setXrailPower(-1, .7);
         sleep(1200);
         drive.setXrailPower(0, 1);

@@ -18,6 +18,8 @@ public class RedAudienceAuto extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.xRailExt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.xRailExt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double xRailRotMin = drive.xRailRot.getCurrentPosition();
 
         waitForStart();
@@ -32,13 +34,10 @@ public class RedAudienceAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
-                .lineTo(new Vector2d(-30, 0))
-                .build();
-        Trajectory trajBack1 = drive.trajectoryBuilder(new Pose2d(-25, 0))
-                .lineTo(new Vector2d(-40, 40))
+                .lineTo(new Vector2d(-29, 0))
                 .build();
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
-                .lineTo(new Vector2d(-26.5, -1)) //placeholder
+                .lineTo(new Vector2d(-27, -1)) //placeholder
                 .build();
         Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
                 .lineTo(new Vector2d(-26.5, 3)) //placeholder
@@ -47,6 +46,7 @@ public class RedAudienceAuto extends LinearOpMode {
         drive.followTrajectory(traj1);
         double backSense = drive.Sense(drive.colorBack);
         double leftSense = drive.Sense(drive.colorLeft);
+        drive.hangerServo.setPosition(0);
         if (backSense < 2.9) { //if team object is at the BACK
             telemetry.addData("Back", backSense);
             telemetry.update();
@@ -57,18 +57,9 @@ public class RedAudienceAuto extends LinearOpMode {
             drive.setXrailPower(-.5,0);
             sleep(1000);
             drive.setXrailPower(0,0);
-            /*drive.turn(-Math.toRadians(90));
-            drive.followTrajectory(trajBack1);
-            telemetry.addData("Back park", backSense);
-            telemetry.update();
-            sleep(1000);
-            while(drive.xRailRot.getCurrentPosition() > xRailRotMin) {
-                drive.setXrailPower(.5, 0);
-            }*/
         } else if (leftSense <2.9) { //if team object is on the LEFT
             telemetry.addData("Left", leftSense);
             telemetry.update();
-            //drive.followTrajectory(trajBack);
             drive.turn(Math.toRadians(90));
             drive.followTrajectory(trajLeft0);
             drive.grabberServoFront(1);
@@ -79,7 +70,6 @@ public class RedAudienceAuto extends LinearOpMode {
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the RIGHT
             telemetry.addData("Right", leftSense);
             telemetry.update();
-            //drive.followTrajectory(trajBack);
             drive.turn(-Math.toRadians(90));
             drive.followTrajectory(trajRight0);
             drive.grabberServoFront(1);
@@ -90,7 +80,6 @@ public class RedAudienceAuto extends LinearOpMode {
             telemetry.addData("?????", leftSense);
         }
         telemetry.update();
-        sleep(10000);
 
 
     }

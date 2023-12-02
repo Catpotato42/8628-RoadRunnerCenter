@@ -4,14 +4,14 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
+@Disabled
 @Autonomous
-public class BlueAudienceAuto extends LinearOpMode {
-
+public class BlueAudienceAutoPark extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -34,18 +34,19 @@ public class BlueAudienceAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-25, 0))
                 .build();
         Trajectory trajBack0 = drive.trajectoryBuilder(new Pose2d(-25, 0, Math.toRadians(180)))
-                .lineTo(new Vector2d(-30, 0))
+                .lineTo(new Vector2d(-29, 0))
                 .build();
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
-                .lineTo(new Vector2d(-26.5, -3.5)) //placeholder
+                .lineTo(new Vector2d(-27, -1)) //placeholder
                 .build();
         Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, Math.toRadians(90)))
-                .lineTo(new Vector2d(-26.5, 3.5)) //placeholder
+                .lineTo(new Vector2d(-26.5, 3)) //placeholder
                 .build();
 
         drive.followTrajectory(traj1);
         double backSense = drive.Sense(drive.colorBack);
         double leftSense = drive.Sense(drive.colorLeft);
+        drive.hangerServo.setPosition(0);
         if (backSense < 2.9) { //if team object is at the BACK
             telemetry.addData("Back", backSense);
             telemetry.update();
@@ -79,9 +80,7 @@ public class BlueAudienceAuto extends LinearOpMode {
             telemetry.addData("?????", leftSense);
         }
         telemetry.update();
-        sleep(10000);
 
 
     }
-
 }

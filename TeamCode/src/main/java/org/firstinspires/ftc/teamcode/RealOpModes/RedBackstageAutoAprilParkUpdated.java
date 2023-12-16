@@ -45,7 +45,8 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
     boolean done = false;
     double i = 0;
     Pose2d postPose;
-
+    public static int exposure = 5;
+    public static int gain = 150;
 
 
 
@@ -67,7 +68,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .addProcessor(aprilTag)
                 .build();
 
-        setManualExposure(3, 150, visionPortal);
+        setManualExposure(exposure, gain, visionPortal);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -141,7 +142,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             placeYellow(drive);
             drive.followTrajectory(trajBack2);
 
-        } else if (leftSense <2.9) { //if team object is on the RIGHT
+        } else if (leftSense <2.7) { //if team object is on the RIGHT
             telemetry.addData("Left", leftSense);
             telemetry.update();
             DESIRED_TAG_ID = 6;
@@ -173,7 +174,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             placeYellow(drive);
             drive.followTrajectory(trajLeft2);
 
-        } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the LEFT
+        } else if (leftSense>=2.7 && backSense >= 2.9) { //if team object is on the LEFT
             telemetry.addData("Right", leftSense);
             telemetry.update();
             DESIRED_TAG_ID = 4;

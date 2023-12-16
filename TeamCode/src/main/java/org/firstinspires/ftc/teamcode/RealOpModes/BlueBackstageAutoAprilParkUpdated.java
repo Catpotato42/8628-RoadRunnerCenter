@@ -64,7 +64,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .addProcessor(aprilTag)
                 .build();
 
-        setManualExposure(5, 150, visionPortal);
+        setManualExposure(3, 150, visionPortal);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -116,7 +116,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajBack0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(900);
+            sleep(1100);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajBack1);
             drive.turn(Math.toRadians(90));
@@ -127,7 +127,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajBackAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(180))
-                    .strafeTo(new Vector2d(-25, i-11))
+                    .strafeTo(new Vector2d(-25, i-19))
                     .build();
             Trajectory trajBack2 = drive.trajectoryBuilder(trajBackAdjust.end())
                     .strafeTo(new Vector2d(-2, i-11)) //check this
@@ -138,7 +138,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            //drive.followTrajectory(trajBack2);
+            drive.followTrajectory(trajBack2);
 
         } else if (leftSense <2.9) { //if team object is on the RIGHT
             telemetry.addData("Left 3", leftSense);
@@ -149,7 +149,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajLeft0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(900);
+            sleep(1100);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
             drive.turn(Math.toRadians(180));
@@ -160,7 +160,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajLeftAdjust = drive.trajectoryBuilder(postPose, -Math.toRadians(90))
-                    .strafeTo(new Vector2d(-30, i-11)) //moves 5 inches to the right
+                    .strafeTo(new Vector2d(-30, i-19)) //moves 5 inches to the right
                     .build();
             Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
                     .strafeTo(new Vector2d(-2, i-11))
@@ -171,7 +171,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            //drive.followTrajectory(trajLeft2);
+            drive.followTrajectory(trajLeft2);
 
         } else if (leftSense>=2.9 && backSense >= 2.9) { //if team object is on the LEFT
             telemetry.addData("Right 1", leftSense);
@@ -183,7 +183,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajRight0);
             drive.grabberServoFront(1);
             drive.setXrailPower(-1,0);
-            sleep(900);
+            sleep(1100);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
             elapsedRunTime.reset();
@@ -194,7 +194,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             i = postPose.getY();
             xPos = postPose.getX();
             Trajectory trajRightAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(90))
-                    .strafeTo(new Vector2d(xPos-3, i-11))
+                    .strafeTo(new Vector2d(xPos-3, i-19))
                     .build();
             Trajectory trajRight2 = drive.trajectoryBuilder(trajRightAdjust.end())
                     .strafeTo(new Vector2d(-2, i-11))
@@ -205,7 +205,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            //drive.followTrajectory(trajRight2);
+            drive.followTrajectory(trajRight2);
 
         } else { //if like the sun explodes idk
             telemetry.addData("?????", leftSense);
@@ -276,11 +276,11 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                 strafe = 0;  // Reduce strafe rate to 50%.
                 turn   = 0;  // Reduce turn rate to 33%.
             }
-            if (rangeError < DESIRED_DISTANCE + .1 && elapsedRunTime.time(TimeUnit.SECONDS) > 3) {
+            if (rangeError < DESIRED_DISTANCE + .1 || elapsedRunTime.time(TimeUnit.SECONDS) > 15) {
                 done = true;
             }
             telemetry.update();
-            telemetry.addData("here: line ", 286);
+            telemetry.addData("here: line ", targetFound);
 
 
 
@@ -328,7 +328,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
 
     private void placeYellow (SampleMecanumDrive drive) {
         drive.setXrailPower(-1, 0);
-        sleep(600);
+        sleep(400);
         drive.setXrailPower(-1, .7);
         sleep(1200);
         drive.setXrailPower(0, 1);

@@ -157,7 +157,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.setXrailPower(0, 0);
             drive.followTrajectory(trajBack2);
 
-        } else if (leftSense <2.7) { //if team object is on the RIGHT
+        } else if (leftSense <2.6) { //if team object is on the RIGHT
             telemetry.addData("Left 3", leftSense);
             telemetry.update();
             DESIRED_TAG_ID = 3;
@@ -190,7 +190,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             placeYellow(drive);
             drive.followTrajectory(trajLeft2);
 
-        } else if (leftSense>=2.7 && backSense >= 2.9) { //if team object is on the LEFT
+        } else if (leftSense>=2.6 && backSense >= 2.9) { //if team object is on the LEFT
             telemetry.addData("Right 1", leftSense);
             telemetry.update();
             DESIRED_TAG_ID = 1;

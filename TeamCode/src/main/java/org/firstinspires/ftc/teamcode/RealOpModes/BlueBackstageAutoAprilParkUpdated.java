@@ -92,12 +92,14 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .lineTo(new Vector2d(-27.5, -3.5))
                 .build();
         Trajectory trajRight1 = drive.trajectoryBuilder(trajRight0.end())
-                .strafeTo(new Vector2d(-19, -7))
+                .strafeTo(new Vector2d(-27.5, -22))
+                .build();
+        Trajectory trajRight2 = drive.trajectoryBuilder(trajRight1.end())
+                .strafeTo(new Vector2d(-18, -19))
                 .build();
 
-
         Trajectory trajLeft0 = drive.trajectoryBuilder(new Pose2d(-26.5, 0, Math.toRadians(90)))
-                .lineTo(new Vector2d(-26.5, 3.5)) //placeholder
+                .lineTo(new Vector2d(-30.5, 3.5)) //placeholder
                 .build();
         Trajectory trajLeft1 = drive.trajectoryBuilder(trajLeft0.end())
                 .strafeTo(new Vector2d(-25, -3))
@@ -129,7 +131,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajBackAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(180))
-                    .strafeTo(new Vector2d(-27, i-19))
+                    .strafeTo(new Vector2d(-27.5, i-20))
                     .build();
             Trajectory trajBack2 = drive.trajectoryBuilder(trajBackAdjust.end())
                     .strafeTo(new Vector2d(-2, i-11))
@@ -139,7 +141,20 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             drive.followTrajectory(trajBackAdjust);
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
-            placeYellow(drive);
+            drive.setXrailPower(-1, 0);
+            sleep(250);
+            drive.setXrailPower(-1, .7);
+            sleep(1200);
+            drive.setXrailPower(0, 1);
+            sleep(1700);
+            drive.setXrailPower(0, 0);
+            drive.grabberServoBack(1);
+            sleep(200); //removable
+            drive.setXrailPower(0, -1);
+            sleep(200);
+            drive.setXrailPower(-.3, -1);
+            sleep(500);
+            drive.setXrailPower(0, 0);
             drive.followTrajectory(trajBack2);
 
         } else if (leftSense <2.7) { //if team object is on the RIGHT
@@ -162,7 +177,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajLeftAdjust = drive.trajectoryBuilder(postPose, -Math.toRadians(90))
-                    .strafeTo(new Vector2d(-30, i-19)) //moves 5 inches to the right
+                    .strafeTo(new Vector2d(-30, i-20)) //moves 5 inches to the right
                     .build();
             Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
                     .strafeTo(new Vector2d(-2, i-11))
@@ -188,6 +203,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             sleep(1100);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajRight1);
+            drive.followTrajectory(trajRight2);
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
@@ -196,10 +212,10 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             i = postPose.getY();
             xPos = postPose.getX();
             Trajectory trajRightAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(90))
-                    .strafeTo(new Vector2d(xPos+3, i-19))
+                    .strafeTo(new Vector2d(xPos+3, i-22))
                     .build();
-            Trajectory trajRight2 = drive.trajectoryBuilder(trajRightAdjust.end())
-                    .strafeTo(new Vector2d(-2, i-11))
+            Trajectory trajRight3 = drive.trajectoryBuilder(trajRightAdjust.end())
+                    .strafeTo(new Vector2d(0, i-13))
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
@@ -207,7 +223,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            drive.followTrajectory(trajRight2);
+            drive.followTrajectory(trajRight3);
 
         } else { //if like the sun explodes idk
             telemetry.addData("?????", leftSense);
@@ -330,7 +346,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
 
     private void placeYellow (SampleMecanumDrive drive) {
         drive.setXrailPower(-1, 0);
-        sleep(400);
+        sleep(250);
         drive.setXrailPower(-1, .7);
         sleep(1200);
         drive.setXrailPower(0, 1);

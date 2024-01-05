@@ -87,7 +87,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .lineTo(new Vector2d(-29.5, 0))
                 .build();
         Trajectory trajBack1 = drive.trajectoryBuilder(trajBack0.end())
-                .strafeTo(new Vector2d(-20, 0))
+                .strafeTo(new Vector2d(-25, 0))
                 .build();
 
         Trajectory trajRight0 = drive.trajectoryBuilder(new Pose2d(-29.5, 0, -Math.toRadians(90)))
@@ -101,7 +101,10 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
                 .lineTo(new Vector2d(-29.5, 3.7)) //placeholder
                 .build();
         Trajectory trajLeft1 = drive.trajectoryBuilder(trajLeft0.end())
-                .strafeTo(new Vector2d(-25, 0))
+                .strafeTo(new Vector2d(-29.5, 22))
+                .build();
+        Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeft1.end())
+                .strafeTo(new Vector2d(-25, 22))
                 .build(); //this is where the robot starts to scan apriltag
 
         drive.followTrajectory(traj1);
@@ -129,7 +132,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajBackAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(180))
-                    .strafeTo(new Vector2d(-23, i+17))
+                    .strafeTo(new Vector2d(-23.5, i+17))
                     .build();
             Trajectory trajBack2 = drive.trajectoryBuilder(trajBackAdjust.end())
                     .strafeTo(new Vector2d(-2, i+11)) //check this
@@ -154,6 +157,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             sleep(1100);
             drive.setXrailPower(0,0);
             drive.followTrajectory(trajLeft1);
+            drive.followTrajectory(trajLeft2);
             elapsedRunTime.reset();
             telemetry.addData("Time: ", elapsedRunTime.time(TimeUnit.SECONDS));
             AprilRun(DESIRED_TAG_ID, elapsedRunTime, drive);
@@ -161,10 +165,10 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajLeftAdjust = drive.trajectoryBuilder(postPose, Math.toRadians(90))
-                    .strafeTo(new Vector2d(-20, i+17))
+                    .strafeTo(new Vector2d(-20, i+19))
                     .build();
-            Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
-                    .strafeTo(new Vector2d(-2, i+11))
+            Trajectory trajLeft3 = drive.trajectoryBuilder(trajLeftAdjust.end())
+                    .strafeTo(new Vector2d(0, i+13))
                     .build();
             telemetry.addData("Position i: ", drive.getPoseEstimate());
             telemetry.update();
@@ -172,7 +176,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             telemetry.addData("Position e: ", drive.getPoseEstimate());
             telemetry.update();
             placeYellow(drive);
-            drive.followTrajectory(trajLeft2);
+            drive.followTrajectory(trajLeft3);
 
         } else if (leftSense>=2.7 && backSense >= 2.9) { //if team object is on the LEFT
             telemetry.addData("Right", leftSense);
@@ -195,7 +199,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajRightAdjust = drive.trajectoryBuilder(postPose, -Math.toRadians(90))
-                    .strafeTo(new Vector2d(-32, i+15))
+                    .strafeTo(new Vector2d(-34, i+21)) //17 to 19, 32 to 34
                     .build();
             Trajectory trajRight2 = drive.trajectoryBuilder(trajRightAdjust.end())
                     .strafeTo(new Vector2d(-2, i+11))
@@ -329,7 +333,7 @@ public class RedBackstageAutoAprilParkUpdated extends LinearOpMode {
 
     private void placeYellow (SampleMecanumDrive drive) {
         drive.setXrailPower(-1, 0);
-        sleep(400);
+        sleep(250);
         drive.setXrailPower(-1, .7);
         sleep(1200);
         drive.setXrailPower(0, 1);

@@ -59,10 +59,25 @@ public class Teleop1 extends OpMode {
             telemetry.addData("current right trigger: ", gamepad1.right_trigger);
             telemetry.addData("current left trigger: ", gamepad1.left_trigger);
             telemetry.update();
-            if (gamepad1.right_trigger > .01) {
+
+            if (gamepad1.right_trigger > .01 && gamepad1.a) {
+                drive.setXrailPower(-gamepad1.right_trigger, -1);
+            } else if (gamepad1.right_trigger > .01 && gamepad1.b && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
+                drive.setXrailPower(-gamepad1.right_trigger, 1);
+            } else if (gamepad1.left_trigger > .01  && drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && gamepad1.a) {
+                drive.setXrailPower(gamepad1.left_trigger, -1);
+            } else if (gamepad1.left_trigger > .01  && drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && gamepad1.b && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
+                drive.setXrailPower(gamepad1.left_trigger, 1);
+            } else if (gamepad1.right_trigger > .01 && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(-gamepad1.right_trigger, -gamepad2.left_stick_y);
-            } else if (gamepad1.left_trigger > .01) {
+            } else if (gamepad1.left_trigger > .01 && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(gamepad1.left_trigger, -gamepad2.left_stick_y);
+            } else if (gamepad1.left_trigger > .01  && drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && gamepad1.b && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
+                drive.setXrailPower(gamepad1.left_trigger, 1);
+            } else if (gamepad1.a) {
+                drive.setXrailPower(0, -1);
+            } else if (gamepad1.b && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
+                drive.setXrailPower(0, 1);
             } else if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("normal :", 0);
@@ -73,19 +88,19 @@ public class Teleop1 extends OpMode {
                 drive.setXrailPower(gamepad2.right_stick_y, -.5);
                 telemetry.addData("goin back :( ZER", 0);
             } else if (drive.xRailRot.getCurrentPosition() > (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
-                drive.setXrailPower(-0.1, -gamepad2.left_stick_y);
+                drive.setXrailPower(-0.3, -gamepad2.left_stick_y);
                 telemetry.addData("goin up :( ZER", 0);
             } else if (drive.xRailRot.getCurrentPosition() > (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() > (xRailExtMax - 3)) {
-                drive.setXrailPower(-0.1, -.5);
+                drive.setXrailPower(-0.3, -.5);
             }
             //start
             //This code below may be useful for coding our intake and drops
             if (gamepad1.dpad_up) {
-                drive.droneServo.setPosition(1); //shoot drone
+                drive.droneServo.setPosition(1); //reset drone
             } else if (gamepad2.dpad_down) {
                 drive.hangerServo.setPosition(0); //release hanger
             } else if (gamepad1.dpad_left) {
-                drive.droneServo.setPosition(0); //reset drone servo
+                drive.droneServo.setPosition(0); //shoot drone servo
             }
 
 
@@ -125,10 +140,6 @@ public class Teleop1 extends OpMode {
                 elapsedRunTimeBack.reset();
 
                 drive.grabberServoBack(0); //grab
-            } else if (gamepad2.a) {
-
-            } else if (gamepad2.b) {
-
             } else if (gamepad2.dpad_left) {
                 telemetry.addData("Extender", drive.xRailExt.getCurrentPosition());
                 telemetry.addData("Rotater", drive.xRailRot.getCurrentPosition());
@@ -136,8 +147,6 @@ public class Teleop1 extends OpMode {
                 drive.xRailRot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 drive.xRailRot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 xRailRotMin = drive.xRailRot.getCurrentPosition();
-                Infractions++;
-                telemetry.addData("Reset encoders: ", Infractions);
             } else if (gamepad2.dpad_up) {
                 telemetry.addData("Extender", drive.xRailExt.getCurrentPosition());
                 telemetry.addData("Rotater", drive.xRailRot.getCurrentPosition());
@@ -145,8 +154,6 @@ public class Teleop1 extends OpMode {
                 drive.xRailExt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 drive.xRailExt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 xRailExtMax = drive.xRailExt.getCurrentPosition();
-                Infractions++;
-                telemetry.addData("Reset encoders: ", Infractions);
             }
         }
 }

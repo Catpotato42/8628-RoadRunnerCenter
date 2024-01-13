@@ -56,8 +56,14 @@ public class Teleop1 extends OpMode {
             } else {
                 drive.mecanumDrive(-.5 * gamepad1.right_stick_y, 0.5 * gamepad1.right_stick_x, 0.5 * gamepad1.left_stick_x);
             }
-
-            if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
+            telemetry.addData("current right trigger: ", gamepad1.right_trigger);
+            telemetry.addData("current left trigger: ", gamepad1.left_trigger);
+            telemetry.update();
+            if (gamepad1.right_trigger > .01) {
+                drive.setXrailPower(-gamepad1.right_trigger, -gamepad2.left_stick_y);
+            } else if (gamepad1.left_trigger > .01) {
+                drive.setXrailPower(gamepad1.left_trigger, -gamepad2.left_stick_y);
+            } else if (drive.xRailRot.getCurrentPosition() < (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(gamepad2.right_stick_y, -gamepad2.left_stick_y);
                 telemetry.addData("normal :", 0);
             } else if (gamepad2.left_bumper || gamepad2.right_bumper) {
@@ -69,7 +75,7 @@ public class Teleop1 extends OpMode {
             } else if (drive.xRailRot.getCurrentPosition() > (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() < (xRailExtMax - 3)) {
                 drive.setXrailPower(-0.1, -gamepad2.left_stick_y);
                 telemetry.addData("goin up :( ZER", 0);
-            } else {
+            } else if (drive.xRailRot.getCurrentPosition() > (xRailRotMin+3) && drive.xRailExt.getCurrentPosition() > (xRailExtMax - 3)) {
                 drive.setXrailPower(-0.1, -.5);
             }
             //start

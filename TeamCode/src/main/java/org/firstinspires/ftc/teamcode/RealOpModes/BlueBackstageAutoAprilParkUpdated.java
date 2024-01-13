@@ -177,7 +177,7 @@ public class BlueBackstageAutoAprilParkUpdated extends LinearOpMode {
             postPose = drive.getPoseEstimate();
             i = postPose.getY();
             Trajectory trajLeftAdjust = drive.trajectoryBuilder(postPose, -Math.toRadians(90))
-                    .strafeTo(new Vector2d(-30, i-20)) //moves 5 inches to the right
+                    .strafeTo(new Vector2d(-34, i-20)) //moves a lot of inches to the right
                     .build();
             Trajectory trajLeft2 = drive.trajectoryBuilder(trajLeftAdjust.end())
                     .strafeTo(new Vector2d(-2, i-11))
